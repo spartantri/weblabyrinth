@@ -45,10 +45,10 @@ class Labyrinth {
 		global $config;
 		mt_srand($this->MakeSeed());
 
-		$this->dbhandle = new SQLiteDatabase($config['tracking_db']);
+		$this->dbhandle = new SQLite3($config['tracking_db']);
 
-		$this->crawler_ip = sqlite_escape_string($ip);
-		$this->crawler_useragent = sqlite_escape_string($useragent);
+		$this->crawler_ip = $ip;
+		$this->crawler_useragent = md5($useragent);
 
 		$this->crawler_info = $this->dbhandle->query("SELECT crawler_ip FROM crawlers WHERE crawler_ip='" . $this->crawler_ip ."' AND crawler_useragent='" . $this->crawler_useragent . "'");
 	}
@@ -100,7 +100,7 @@ class Labyrinth {
 		//Have we seen this crawler recently?		
 		$last_seen_query = $this->dbhandle->query("SELECT strftime('%s',datetime('now','localtime')) - strftime('%s',last_alert) FROM crawlers WHERE crawler_ip='" . $this->crawler_ip . "' AND crawler_useragent='" . $this->crawler_useragent . "'") or die(sqlite_error_string($this->dbhandle->lastError()));;
 		
-		$time = $last_seen_query->fetchSingle();
+		$time = $last_seen_query->fetchArray(SQLITE3_ASSOC);
 
 		if (($time == 0) || ($time > 3600)){
 			if ($config['alert_ids']['enabled']){
@@ -124,7 +124,7 @@ class Labyrinth {
 	function LogCrawler(){
 		global $config;
 
-		if($this->crawler_info->numRows() > 0){
+		if($this->crawler_info->fetchArray()['count'] > 0){
 			$this->dbhandle->query("UPDATE crawlers SET last_seen = datetime('now','localtime'), num_hits=num_hits+1 WHERE crawler_ip='" . $this->crawler_ip . "' AND crawler_useragent='" . $this->crawler_useragent . "'");
 		}else{
 			$crawler_rdns = gethostbyaddr($this->crawler_ip);

@@ -36,13 +36,13 @@
 	global $config;
 	$config = array(
 		//Web Path where WebLabyrinth is installed
-		'web_path' => '/labyrinth',
+		'web_path' => '/',
 
 		//Text file to generate text from
 		'corpus' => 'alice.txt',
 
 		//Database to track crawlers
-		'tracking_db' => '/opt/weblabyrinth/labyrinth.db',
+		'tracking_db' => '/var/www/html/labyrinth.db',
 
 		'bogus_email' => array(
 			//Do we want to generate mailto: in addition to web links?
