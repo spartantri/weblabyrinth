@@ -42,7 +42,7 @@
 		'corpus' => 'alice.txt',
 
 		//Database to track crawlers
-		'tracking_db' => '/var/www/html/labyrinth.db',
+		'tracking_db' => 'labyrinth.db',
 
 		'bogus_email' => array(
 			//Do we want to generate mailto: in addition to web links?
@@ -69,7 +69,7 @@
 
 		'alert_email' => array(
 			//Do we want to generate email alerts?
-			'enabled' => 'true',
+			'enabled' => false,
 
 			//e-mail to send alerts to
 			'address' => 'root@localhost'

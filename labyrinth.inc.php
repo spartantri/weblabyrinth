@@ -45,7 +45,8 @@ class Labyrinth {
 		global $config;
 		mt_srand($this->MakeSeed());
 
-		$this->dbhandle = new SQLite3($config['tracking_db']);
+		/*$this->dbhandle = new SQLite3($config['tracking_db']);*/
+		$this->dbhandle = new SQLite3('labyrinth.db');
 
 		$this->crawler_ip = $ip;
 		$this->crawler_useragent = md5($useragent);
@@ -124,7 +125,7 @@ class Labyrinth {
 	function LogCrawler(){
 		global $config;
 
-		if($this->crawler_info->fetchArray()['count'] > 0){
+		if($this->crawler_info->fetchArray()[0] != null){
 			$this->dbhandle->query("UPDATE crawlers SET last_seen = datetime('now','localtime'), num_hits=num_hits+1 WHERE crawler_ip='" . $this->crawler_ip . "' AND crawler_useragent='" . $this->crawler_useragent . "'");
 		}else{
 			$crawler_rdns = gethostbyaddr($this->crawler_ip);
